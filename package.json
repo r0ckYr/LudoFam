@@ -20,5 +20,11 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "esbuild": "^0.20.2",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.0"
+  }
 }
