@@ -9,5 +9,5 @@
     "node_modules",
     "./dist/**/*" 
   ],
-  "include": ["."]
+  "include": [".", "../../packages/common/src/Game.ts"]
 }
