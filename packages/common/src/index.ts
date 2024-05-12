@@ -5,5 +5,6 @@ export type Result = {
     executed: boolean;
     player: number;
     piece: number;
+    entry: boolean;
     nextPos: number;
   };
