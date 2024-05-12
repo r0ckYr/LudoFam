@@ -6,5 +6,5 @@ export type Result = {
     player: number;
     piece: number;
     entry: boolean;
-    nextPos: number;
+    nextPos: number | undefined;
   };

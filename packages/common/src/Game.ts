@@ -5,7 +5,7 @@ export class GameBoard {
     private entry: number[];
     private exitPoints: number[];
     private startPoints: number[];
-    private board: number[];
+    private board: string[][];
 
     constructor() {
         this.players = [
@@ -14,39 +14,71 @@ export class GameBoard {
             [-1, -1, -1, -1],
             [-1, -1, -1, -1]
         ];
-        this.board = new Array<number>(52).fill(0);
+        this.board = [];
+        for (let i = 0; i < 52; i++) {
+            this.board.push([]);
+        }
         this.entry = new Array<number>(6).fill(0);
-        this.exitPoints = [50, 37, 24, 11];
+        this.exitPoints = [50, 11, 24, 37];
         this.startPoints = [0, 13, 26, 39];
     }
     
-    makeMove(player: number, piece: number, diceValue: number): Result {
-        if (diceValue !== 6) {
+    makeMove(this: any, player: number, piece: number, diceValue: number): Result {
+        if (diceValue > 6) {
             return { executed: false, player: 0, piece: 0, entry: false, nextPos: 0 };
         }
-
-        if(piece>3 || player>3 || piece<0 || piece<0) {
+      
+        if (piece > 3 || player > 3 || piece < 0 || player < 0) {
             return { executed: false, player, piece, entry: false, nextPos: 0 };
         }
-
-        // Condition when player's selected piece is in home
-        if (this.players[player][piece] === -1) {
-            return { executed: true, player: player, piece: piece, entry: false, nextPos: this.startPoints[player] };
+      
+        if (!this.players || !this.startPoints || !this.exitPoints) {
+            // Check if necessary properties are defined
+            return { executed: false, player, piece, entry: false, nextPos: 0 };
         }
-
+      
+        // Condition when player's selected piece is in home and diceValue is 6
+        if (this.players[player][piece] === -1 && diceValue===6) {
+            this.players[player][piece] = this.startPoints[player];
+            this.board[this.startPoints[player]].push(`${player}, ${piece}`);
+            return { executed: true, player: player, piece: piece, entry: false, nextPos: this.startPoints[player] || 0 };
+        }
+      
         // Condition when player's piece is not in home
-        if(this.players[player][piece] != -1) {
-            let nextPos = this.players[player][piece] + diceValue;
-            if (this.exitPoints[player]>nextPos) {
-                nextPos = nextPos - this.exitPoints[player];
-                return { executed: true, player: player, piece: piece, entry: true, nextPos: nextPos }
+        if (this.players[player][piece] !== -1) {
+            let nextPos = (this.players[player][piece] || 0) + diceValue;
+            this.board[this.players[player][piece]].filter((s: string) => {s!=`${player}, ${piece}`});
+
+            if (this.exitPoints[player] && this.exitPoints[player] < nextPos) {
+                nextPos = nextPos - (this.exitPoints[player] || 0);
+                return { executed: true, player: player, piece: piece, entry: true, nextPos: nextPos };
             }
+
+            // cutting logic
+            let toCut: string[] = [];
+            if(this.board[nextPos]) {
+                // cut those that does not belong to the same player
+                this.board[nextPos].forEach((s: string) => {
+                    if(s.split(',')[0] !== `${player}`) {
+                        toCut.push(s);
+                    }
+                });
+                this.board[nextPos].filter((s: string) => {
+                    s.split(",")[0]==player.toString()
+                });
+                toCut.forEach((s: string) => {
+                    let playerToCut = s.split(",")[0] || 0;
+                    let pieceToCut = s.split(",")[1] || 0;
+                    this.players[playerToCut][pieceToCut] = -1;
+                })
+            }
+
+            this.board[this.players[player][piece]].push(`${player}, ${piece}`);
+            this.players[player][piece] = nextPos;
             return { executed: true, player: player, piece: piece, entry: false, nextPos: nextPos };
         }
-
-        // Add more conditions and logic as needed
-        
-        
-        // return { executed: true, player, piece, nextPos: 0 };
-    }
+        console.log(this.board);
+        return { executed: true, player, piece, entry: false, nextPos: 0 };
+      }
+      
 }
