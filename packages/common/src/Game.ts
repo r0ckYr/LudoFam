@@ -1,4 +1,4 @@
-import { Move, Result } from '@repo/common/config';
+import { Result, Move } from '@repo/common/config';
 
 export class GameBoard {
     private players: number[][];
@@ -23,7 +23,15 @@ export class GameBoard {
         this.startPoints = [0, 13, 26, 39];
     }
     
-    makeMove(this: any, player: number, piece: number, diceValue: number): Result {
+    public getBoard(): string[][] {
+        return this.board;
+    }
+
+    public getPlayers(): number[][] {
+        return this.players;
+    }
+
+    public makeMove(this: any, player: number, piece: number, diceValue: number): Result {
         if (diceValue > 6) {
             return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
         }
@@ -80,7 +88,7 @@ export class GameBoard {
 
             this.board[nextPos].push(`${player}, ${piece}`);
             this.players[player][piece] = nextPos;
-            
+
             Moves.push({player: player, piece: piece, entry: false, nextPos: nextPos});
             return { success: true, Moves: Moves};
         }

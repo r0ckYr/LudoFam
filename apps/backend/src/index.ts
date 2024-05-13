@@ -6,6 +6,7 @@ import WebSocket, { WebSocketServer } from 'ws';
 const app = express();
 
 app.get("/", (req, res) => {
+    
     res.json({
         message: "hello"
     })
