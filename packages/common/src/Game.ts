@@ -1,4 +1,4 @@
-import { Result } from '@repo/common/config';
+import { Move, Result } from '@repo/common/config';
 
 export class GameBoard {
     private players: number[][];
@@ -25,60 +25,66 @@ export class GameBoard {
     
     makeMove(this: any, player: number, piece: number, diceValue: number): Result {
         if (diceValue > 6) {
-            return { executed: false, player: 0, piece: 0, entry: false, nextPos: 0 };
+            return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
         }
       
         if (piece > 3 || player > 3 || piece < 0 || player < 0) {
-            return { executed: false, player, piece, entry: false, nextPos: 0 };
+            return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
         }
       
         if (!this.players || !this.startPoints || !this.exitPoints) {
             // Check if necessary properties are defined
-            return { executed: false, player, piece, entry: false, nextPos: 0 };
+            return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
         }
       
         // Condition when player's selected piece is in home and diceValue is 6
         if (this.players[player][piece] === -1 && diceValue===6) {
             this.players[player][piece] = this.startPoints[player];
             this.board[this.startPoints[player]].push(`${player}, ${piece}`);
-            return { executed: true, player: player, piece: piece, entry: false, nextPos: this.startPoints[player] || 0 };
+            return { success: true, Moves: [{ player: player, piece: piece, entry: false, nextPos: this.startPoints[player] || 0 }]};
         }
       
         // Condition when player's piece is not in home
         if (this.players[player][piece] !== -1) {
             let nextPos = (this.players[player][piece] || 0) + diceValue;
             this.board[this.players[player][piece]].filter((s: string) => {s!=`${player}, ${piece}`});
-
+            
+            // Condition if the player's selected piece can enter the entry
             if (this.exitPoints[player] && this.exitPoints[player] < nextPos) {
                 nextPos = nextPos - (this.exitPoints[player] || 0);
-                return { executed: true, player: player, piece: piece, entry: true, nextPos: nextPos };
+                return { success: true, Moves: [{ player: player, piece: piece, entry: true, nextPos: nextPos }]};
             }
 
             // cutting logic
             let toCut: string[] = [];
-            if(this.board[nextPos]) {
-                // cut those that does not belong to the same player
-                this.board[nextPos].forEach((s: string) => {
-                    if(s.split(',')[0] !== `${player}`) {
-                        toCut.push(s);
-                    }
-                });
-                this.board[nextPos].filter((s: string) => {
-                    s.split(",")[0]==player.toString()
-                });
-                toCut.forEach((s: string) => {
-                    let playerToCut = s.split(",")[0] || 0;
-                    let pieceToCut = s.split(",")[1] || 0;
-                    this.players[playerToCut][pieceToCut] = -1;
-                })
-            }
+            let Moves: Move[] = [];
 
-            this.board[this.players[player][piece]].push(`${player}, ${piece}`);
+            // save all those diff palyer pieces
+            this.board[nextPos].forEach((s: string) => {
+                if(s.split(',')[0] !== `${player}`) {
+                    toCut.push(s);
+                }
+            });
+
+            // remove all those diff player pieces
+            this.board[nextPos].filter((s: string) => {
+                s.split(",")[0]==player.toString()
+            });
+
+            toCut.forEach((s: string) => {
+                let playerToCut = Number(s.split(",")[0]);
+                let pieceToCut = Number(s.split(",")[1]);
+                Moves.push({player: playerToCut, piece: pieceToCut, entry: false, nextPos: -1});
+                this.players[playerToCut][pieceToCut] = -1;
+            })
+
+            this.board[nextPos].push(`${player}, ${piece}`);
             this.players[player][piece] = nextPos;
-            return { executed: true, player: player, piece: piece, entry: false, nextPos: nextPos };
+            
+            Moves.push({player: player, piece: piece, entry: false, nextPos: nextPos});
+            return { success: true, Moves: Moves};
         }
-        console.log(this.board);
-        return { executed: true, player, piece, entry: false, nextPos: 0 };
+        return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
       }
       
 }

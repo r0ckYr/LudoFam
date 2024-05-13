@@ -1,10 +1,14 @@
 export const name = "test@123";
 export type Player = string;
 
+export type Move = {
+  player: number;
+  piece: number;
+  entry: boolean;
+  nextPos: number | undefined;
+};
+
 export type Result = {
-    executed: boolean;
-    player: number;
-    piece: number;
-    entry: boolean;
-    nextPos: number | undefined;
-  };
+  success: boolean;
+  Moves: Move[];
+}
