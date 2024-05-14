@@ -2,6 +2,7 @@ import express from 'express';
 import WebSocket, { WebSocketServer } from 'ws';
 // import { name } from '@repo/common/config';
 // console.log(name);
+// error still there
 
 const app = express();
 
