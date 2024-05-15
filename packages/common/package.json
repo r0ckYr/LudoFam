@@ -1,9 +1,9 @@
 {
   "name": "@repo/common",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./dist/Game.js",
   "exports": {
-    "./config": "./src/index.ts",
+    "./config": "./src/Types.ts",
     "./game": "./src/Game.ts"
   },
   "scripts": {
@@ -12,5 +12,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@babel/core": "^7.24.5",
+    "@babel/preset-env": "^7.24.5",
+    "babel-loader": "^9.1.3"
+  }
 }
