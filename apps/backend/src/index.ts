@@ -1,13 +1,13 @@
+import { GameBoard } from "@repo/common/game";
 import express from 'express';
 import WebSocket, { WebSocketServer } from 'ws';
 // import { name } from '@repo/common/config';
 // console.log(name);
-// error still there
+// // error still there
 
 const app = express();
 
 app.get("/", (req, res) => {
-    
     res.json({
         message: "hello"
     })
