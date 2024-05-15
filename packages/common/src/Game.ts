@@ -1,13 +1,16 @@
 import { Result, Move } from '@repo/common/config';
+import { WebSocket } from 'ws';
 
 export class GameBoard {
     private players: number[][];
+    private playerNames: WebSocket[];
     private entry: number[];
     private exitPoints: number[];
     private startPoints: number[];
     private board: string[][];
 
-    constructor() {
+    constructor(player1: WebSocket, player2: WebSocket, player3: WebSocket, player4: WebSocket) {
+        this.playerNames = [player1, player2, player3, player4];
         this.players = [
             [-1, -1, -1, -1],
             [-1, -1, -1, -1],
@@ -29,6 +32,10 @@ export class GameBoard {
 
     public getPlayers(): number[][] {
         return this.players;
+    }
+
+    public getSocketName(this: any, player: number): WebSocket {
+        return this.playerNames[player];
     }
 
     public makeMove(this: any, player: number, piece: number, diceValue: number): Result {

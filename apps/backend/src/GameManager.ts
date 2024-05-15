@@ -1,13 +1,36 @@
-import { GameBoard } from "@repo/common/game";
+import { WebSocket } from "ws";
+import { GameBoard } from "@repo/common/game"; 
 
-const game = new GameBoard();
+interface GameCollection {
+    [key: string]: WebSocket[];
+}
 
-console.log(game.getBoard);
+export class GameManager {
+    private games: GameBoard[];
+    private gamesPlayers: GameCollection = {};
+    // private pendingGames: string[][];
+    // private 
 
-console.log(game.getPlayers);
+    handleMessages(socket: WebSocket) {
+        socket.on("message", (data) => {
+            const message = JSON.parse(data.toString());
+            if(message.type === INIT_GAME) {
+                this.gamesPlayers[gameCode]?.push(socket);
+                if(this.gamesPlayers[gameCode]?.length === 4) {
+                    
+                }
+            }
+            if(message.type === MOVE) {
 
-console.log(game.makeMove(0, 0, 6));
+            }
+        })
+    }
+    
+    removeUser() {
 
-console.log(game.getBoard);
+    }
 
-console.log(game.getPlayers);
+    handleMessage() {
+
+    }
+}
