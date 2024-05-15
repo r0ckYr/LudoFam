@@ -2,15 +2,17 @@ import { Result, Move } from '@repo/common/config';
 import { WebSocket } from 'ws';
 
 export class GameBoard {
+    public gameCode: string;
     private players: number[][];
-    private playerNames: WebSocket[];
+    public playerNames: WebSocket[];
     private entry: number[];
     private exitPoints: number[];
     private startPoints: number[];
     private board: string[][];
 
-    constructor(player1: WebSocket, player2: WebSocket, player3: WebSocket, player4: WebSocket) {
-        this.playerNames = [player1, player2, player3, player4];
+    constructor(playerNames: WebSocket[], gameCode: string) {
+        this.gameCode = gameCode;
+        this.playerNames = playerNames;
         this.players = [
             [-1, -1, -1, -1],
             [-1, -1, -1, -1],
@@ -24,6 +26,31 @@ export class GameBoard {
         this.entry = new Array<number>(6).fill(0);
         this.exitPoints = [50, 11, 24, 37];
         this.startPoints = [0, 13, 26, 39];
+
+        this.playerNames[0]?.send(JSON.stringify({
+            type: "init_game",
+            payload: {
+                color: "red"
+            }
+        }))
+        this.playerNames[1]?.send(JSON.stringify({
+            type: "init_game",
+            payload: {
+                color: "yellow"
+            }
+        }))
+        this.playerNames[1]?.send(JSON.stringify({
+            type: "init_game",
+            payload: {
+                color: "green"
+            }
+        }))
+        this.playerNames[1]?.send(JSON.stringify({
+            type: "init_game",
+            payload: {
+                color: "blue"
+            }
+        }))
     }
     
     public getBoard(): string[][] {

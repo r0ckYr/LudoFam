@@ -23,7 +23,7 @@ const games = new GameManager();
 wss.on('connection', function connection(socket) {
     games.handleMessages(socket);
     
-    socket.on('disconnect', games.removeUser);
+    socket.on('disconnect', games.removeUser(socket));
 
     socket.on('error', console.error);
 });
