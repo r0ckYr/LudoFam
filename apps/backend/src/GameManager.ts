@@ -18,6 +18,7 @@ export class GameManager {
     handleMessages(socket: WebSocket) {
         socket.on("message", (data) => {
             const message = JSON.parse(data.toString());
+
             if(message.type === INIT_GAME) {
                 const gameCode: string = message.gameCode;
                 if (!this.gamesPlayers[gameCode]) {
@@ -30,6 +31,7 @@ export class GameManager {
                     this.games.push(game);
                 }
             }
+            
             if(message.type === MOVE) {
                 const move = message.move;
                 const game = this.games.find((game) => 
@@ -38,6 +40,10 @@ export class GameManager {
                     game.playerNames[2] === socket ||
                     game.playerNames[3] === socket
                 );
+                const board: string[][] = game?.getBoard() ?? [];
+                console.log(socket);
+                console.log(game?.getPlayers());
+                console.log(board);
             }
         })
     }

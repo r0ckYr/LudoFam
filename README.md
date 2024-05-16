@@ -79,3 +79,16 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+
+
+```json
+{
+  "message": "init_game",
+  "gameCode": "your_game_code_here"
+}
+
+{
+  "message": "move",
+  "move": "random"
+}
+```

@@ -1,33 +1,35 @@
-import { GameBoard } from "@repo/common/game";
-import express from 'express';
 import WebSocket, { WebSocketServer } from 'ws';
+import * as dotenv from 'dotenv';
+import express from 'express';
+
+import { GameBoard } from "@repo/common/game";
 import { GameManager } from "./GameManager";
+
+dotenv.config();
+
 // import { name } from '@repo/common/config';
 // console.log(name);
-// // error still there
 
-// const app = express();
+const app = express();
 
-// app.get("/", (req, res) => {
-//     res.json({
-//         message: "hello"
-//     })
-// })
+app.get("/", (req, res) => {
+    res.json({
+        message: "hello"
+    })
+})
 
-// const httpServer = app.listen(3000);
+const httpServer = app.listen(3000);
 
-// const wss = new WebSocketServer({ server: httpServer });
-const wss = new WebSocketServer({ port: 8080 });
+const wss = new WebSocketServer({ server: httpServer });
 
 const games = new GameManager();
 
 wss.on('connection', function connection(socket) {
-    console.log("in wss");
     games.handleMessages(socket);
     
     socket.on('disconnect', () => games.removeUser(socket));
 
     socket.on('error', console.error);
 
-    socket.send("hello");
+    socket.send(`Connection made successfully`);
 });

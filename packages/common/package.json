@@ -15,7 +15,6 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@babel/core": "^7.24.5",
     "@babel/preset-env": "^7.24.5",
     "babel-loader": "^9.1.3"
