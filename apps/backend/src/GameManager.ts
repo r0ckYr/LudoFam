@@ -25,7 +25,9 @@ export class GameManager {
                     this.gamesPlayers[gameCode] = [];
                 }
                 this.gamesPlayers[gameCode]?.push(socket);
-                if(this.gamesPlayers[gameCode]?.length === 4) {
+                const noOfPlayers = this.gamesPlayers[gameCode]?.length;
+
+                if(noOfPlayers === 4) {
                     const gamePlayers = this.gamesPlayers[gameCode] || [];
                     const game = new GameBoard(gamePlayers, gameCode);
                     this.games.push(game);
@@ -34,14 +36,20 @@ export class GameManager {
             
             if(message.type === MOVE) {
                 const move = message.move;
+                // this.games.map((game) => {
+                //     console.log(game.playerNames);
+                // });
                 const game = this.games.find((game) => 
                     game.playerNames[0] === socket || 
                     game.playerNames[1] === socket ||
                     game.playerNames[2] === socket ||
                     game.playerNames[3] === socket
                 );
-                const board: string[][] = game?.getBoard() ?? [];
-                console.log(socket);
+                const board: string[][] = game?.getBoard() || [];
+                console.log(game?.getPlayers());
+                console.log(board);
+                console.log(move.player, move.piece, move.diceValue);
+                console.log(game?.makeMove(move.player, move.piece, move.diceValue))
                 console.log(game?.getPlayers());
                 console.log(board);
             }

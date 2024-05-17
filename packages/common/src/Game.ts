@@ -39,13 +39,13 @@ export class GameBoard {
                 color: "yellow"
             }
         }))
-        this.playerNames[1]?.send(JSON.stringify({
+        this.playerNames[2]?.send(JSON.stringify({
             type: "init_game",
             payload: {
                 color: "green"
             }
         }))
-        this.playerNames[1]?.send(JSON.stringify({
+        this.playerNames[3]?.send(JSON.stringify({
             type: "init_game",
             payload: {
                 color: "blue"
@@ -67,14 +67,17 @@ export class GameBoard {
 
     public makeMove(this: any, player: number, piece: number, diceValue: number): Result {
         if (diceValue > 6) {
+            console.log("Error in dice value");
             return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
         }
       
         if (piece > 3 || player > 3 || piece < 0 || player < 0) {
+            console.log("Error in piece player");
             return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
         }
       
         if (!this.players || !this.startPoints || !this.exitPoints) {
+            console.log("Error in points");
             // Check if necessary properties are defined
             return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
         }
@@ -126,6 +129,7 @@ export class GameBoard {
             Moves.push({player: player, piece: piece, entry: false, nextPos: nextPos});
             return { success: true, Moves: Moves};
         }
+        console.log("last");
         return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
       }
       
