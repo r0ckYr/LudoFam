@@ -7,8 +7,8 @@ export function App() {
   return (
       <div style={{
         backgroundImage: "url('back.jpg')",
-        backgroundRepeat: 'repeat-y',
-        backgroundSize: 'cover',
+        position: 'sticky',
+        top: '0px'
       }}>
     <RecoilRoot>
         <BrowserRouter>

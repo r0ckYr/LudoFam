@@ -10,5 +10,6 @@ export type Move = {
 
 export type Result = {
   success: boolean;
+  completed: boolean;
   Moves: Move[];
 }
