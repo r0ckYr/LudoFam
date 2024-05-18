@@ -4,6 +4,7 @@ import { WebSocket } from 'ws';
 export class GameBoard {
     public gameCode: string;
     private players: number[][];
+    private playersPosEnt: number[][];
     private totalCompleted: number;
     private playersMoved: number[][];
     private playersCompleted: boolean[][];
@@ -21,6 +22,12 @@ export class GameBoard {
             [false, false, false, false],
             [false, false, false, false],
             [false, false, false, false]
+        ]
+        this.playersPosEnt = [
+            [-1, -1, -1, -1],
+            [-1, -1, -1, -1],
+            [-1, -1, -1, -1],
+            [-1, -1, -1, -1]
         ]
         this.players = [
             [-1, -1, -1, -1],
@@ -141,20 +148,24 @@ export class GameBoard {
                 nextPos = nextPos - (this.exitPoints[player] || 0);
                 if(this.players[player][piece]===0) {
                     if(nextPos<6) {
-                        this.entry[player][this.playersMoved[player][piece]] = this.entry[player][this.playersMoved[player][piece]].filter((s: string) => {
-                            s!=`${player},${piece}`;
-                        });
+                        this.entry[player][this.playersPosEnt[player][piece]] = 
+                            this.entry[player][this.playersPosEnt[player][piece]].filter((s: string) => {
+                                s!=`${player},${piece}`;
+                            });
                         this.playerMoved[player][piece]+=diceValue;
-                        this.entry[player][nextPos].push(`${player}, ${piece}`);
+                        this.playersPosEnt[player][piece] = nextPos-1;
+                        this.entry[player][nextPos-1].push(`${player}, ${piece}`);
                         return { success: true, completed: false, Moves: [{ player: player, piece: piece, entry: true, nextPos: nextPos }]};
                     } else if(nextPos>6) {
                         return { success: false, completed: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
                     } else {
-                        this.entry[player][this.playersMoved[player][piece]] = this.entry[player][this.playersMoved[player][piece]].filter((s: string) => {
-                            s!=`${player},${piece}`;
-                        });
+                        this.entry[player][this.playersPosEnt[player][piece]] = 
+                            this.entry[player][this.playersPosEnt[player][piece]].filter((s: string) => {
+                                s!=`${player},${piece}`;
+                            });
                         this.playerMoved[player][piece]+=diceValue;
-                        this.entry[player][nextPos].push(`${player}, ${piece}`);
+                        this.playersPosEnt[player][piece] = nextPos-1;
+                        this.entry[player][nextPos-1].push(`${player}, ${piece}`);
                         this.playersCompleted[player][piece] = true;
                         this.totalCompleted++;
                         if(this.totalCompleted===4) {
@@ -201,6 +212,5 @@ export class GameBoard {
         }
         console.log("last");
         return { success: false, completed: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
-      }
-      
+      }     
 }
