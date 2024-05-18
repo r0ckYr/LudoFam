@@ -81,9 +81,12 @@ export class GameBoard {
             // Check if necessary properties are defined
             return { success: false, Moves: [{ player: 0, piece: 0, entry: false, nextPos: 0 }] };
         }
-      
+        
+        console.log(player, piece, diceValue, this.players[player][piece])
+
         // Condition when player's selected piece is in home and diceValue is 6
         if (this.players[player][piece] === -1 && diceValue===6) {
+            console.log("6");
             this.players[player][piece] = this.startPoints[player];
             this.board[this.startPoints[player]].push(`${player}, ${piece}`);
             return { success: true, Moves: [{ player: player, piece: piece, entry: false, nextPos: this.startPoints[player] || 0 }]};
@@ -91,12 +94,17 @@ export class GameBoard {
       
         // Condition when player's piece is not in home
         if (this.players[player][piece] !== -1) {
+            console.log("ffff");
             let nextPos = (this.players[player][piece] || 0) + diceValue;
-            this.board[this.players[player][piece]].filter((s: string) => {s!=`${player}, ${piece}`});
             
+            // Remove player from old position
+            this.board[this.players[player][piece]] = this.board[this.players[player][piece]].filter((s: string) => s !== `${player}, ${piece}`);
+
             // Condition if the player's selected piece can enter the entry
             if (this.exitPoints[player] && this.exitPoints[player] < nextPos) {
+                console.log("entry", player);
                 nextPos = nextPos - (this.exitPoints[player] || 0);
+                
                 return { success: true, Moves: [{ player: player, piece: piece, entry: true, nextPos: nextPos }]};
             }
 
