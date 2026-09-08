@@ -2,6 +2,7 @@ import './App.css';
 import { Landing } from "./pages/Landing"
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { RecoilRoot } from 'recoil';
+import { Analytics } from '@vercel/analytics/react';
 
 export function App() {
   return (
@@ -17,6 +18,7 @@ export function App() {
           </Routes>
         </BrowserRouter>
     </RecoilRoot>
+    <Analytics />
       </div>
   )
 }
